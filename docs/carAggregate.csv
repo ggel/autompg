@@ -1,0 +1,45 @@
+Make,CarCount,AverageHighwayMPG,AverageCityMPG,AverageEngineCyclinders
+Aston Martin,1,19.0,12.0,12.0
+Ferrari,2,19.0,14.0,10.0
+Lamborghini,2,19.0,12.0,11.0
+Rolls-Royce,1,19.0,12.0,12.0
+Bentley,2,21.0,12.5,10.0
+Maserati,2,22.0,15.0,7.0
+McLaren Automotive,1,23.0,16.0,8.0
+Roush Performance,1,23.0,14.0,8.0
+Dodge,5,23.6,15.6,7.2
+Lotus,1,24.0,17.0,6.0
+Land Rover,4,24.3,18.3,6.0
+Ram,3,24.3,17.3,6.0
+Genesis,3,24.7,16.3,6.7
+Jeep,6,24.7,18.0,6.0
+Porsche,3,24.7,18.0,6.0
+GMC,4,25.0,18.3,5.5
+Cadillac,6,25.8,18.0,6.0
+Infiniti,4,26.5,20.5,5.5
+Lincoln,2,26.5,19.5,5.0
+Toyota,4,27.0,22.0,5.5
+Audi,5,27.4,19.4,6.4
+Buick,3,28.0,20.3,4.7
+Alfa Romeo,2,28.5,20.5,5.0
+Volkswagen,3,28.7,21.0,4.7
+Lexus,5,28.8,23.6,5.6
+Subaru,3,29.3,22.0,4.7
+Jaguar,4,29.5,21.0,5.5
+Chrysler,3,30.0,19.7,6.0
+Volvo,2,30.5,22.5,4.0
+Acura,2,31.5,23.0,5.0
+MINI,1,33.0,24.0,4.0
+Honda,3,34.3,26.0,4.7
+Ford,8,34.5,30.9,4.9
+Mazda,2,34.5,26.5,4.0
+Mercedes-Benz,5,35.8,31.2,6.0
+BMW,9,38.2,35.6,5.0
+Chevrolet,7,38.9,34.9,4.9
+smart,1,39.0,32.0,3.0
+Nissan,6,39.3,37.7,4.7
+Kia,4,43.3,45.0,4.5
+Mitsubishi,4,50.5,50.0,3.3
+Fiat,3,55.7,56.3,2.7
+Hyundai,3,60.3,65.0,3.3
+Tesla,1,98.0,92.0,0.0
