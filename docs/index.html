@@ -42,6 +42,9 @@
 <script>
 async function init() {
 
+pageOne()
+
+/*
 const data = await d3.csv('https://flunky.github.io/cars2017.csv');
 
 //console.log(data[0].EngineCylinders,data[0].AverageCityMPG,data[0].AverageHighwayMPG);
@@ -118,27 +121,312 @@ d3.select("svg").append("text")
 
     //could add dropdown for manufacturer, that highlights their cars
     //could add legend as well
+    */
 }
+
+
+async function pageOne() {
+
+const data = await d3.csv('https://flunky.github.io/cars2017.csv');
+
+//console.log(data[0].EngineCylinders,data[0].AverageCityMPG,data[0].AverageHighwayMPG);
+
+var x = d3.scaleLog().domain([10,150]).range([0,400]).base(10);
+var y = d3.scaleLog().domain([10,150]).range([400,0]).base(10);
+var margin = 50;
+var width = 500;
+var height = 500;
+
+var div = d3.select("body").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0);
+
+d3.select('svg').selectAll("*").remove();
+
+d3.select('svg')
+.attr("width", width + 2*margin)
+.attr("height", height + 2*margin)
+.append("g")
+.attr("transform","translate("+margin+","+margin+")")
+.selectAll('circle').data(data).enter().append('circle')
+.attr("cx", function(d,i) {return x(d.AverageCityMPG);})
+.attr("cy", function(d,i) {return y(d.AverageHighwayMPG);})
+.attr("r", function(d,i) {return (+d.EngineCylinders) + 2;})
+.style("fill", function(d,i) {
+	if (d.Fuel == "Gasoline") {return "red"}
+	else if (d.Fuel == "Electricity") {return "green"}
+	else {return "lightblue"}
+	;})
+
+.on("mouseover", function(d) {		
+            div.transition()		
+                .duration(200)		
+                .style("opacity", .9);		
+            div	.html(d.Make + " - " + d.EngineCylinders + " cylinder " + "<br>" +
+            	"MPG: " + d.AverageCityMPG + " city, " + d.AverageHighwayMPG + " highway"
+            	)	
+                .style("left", (d3.event.pageX) + "px")		
+                .style("top", (d3.event.pageY - 28) + "px");	
+            })
+
+.on("mouseout", function(d) {		
+            div.transition()		
+                .duration(500)		
+                .style("opacity", 0);
+            })
+;
+
+
+d3.select("svg").append("g")
+	.attr("transform","translate("+margin+","+margin+")")
+	.call(d3.axisLeft(y).tickValues([10, 20, 50, 100]).tickFormat(d3.format("~s")))
+	;
+
+d3.select("svg").append("g")
+	.attr("transform","translate("+margin+","+(400+margin)+")")
+	.call(d3.axisBottom(x).tickValues([10, 20, 50, 100]).tickFormat(d3.format("~s")))
+    ;
+
+d3.select("svg").append("text")
+    .attr("class", "x label")
+    .attr("text-anchor", "end")
+    .attr("x", width-margin*2+50)
+    .attr("y", height-12)
+    .text("Average City MPG");
+
+d3.select("svg").append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "end")
+    .attr("y", 5)
+    .attr("dy", ".75em")
+    .attr("x", -50)
+    .attr("transform", "rotate(-90)")
+    .text("Average Highway MPG");
+
+    //could add dropdown for manufacturer, that highlights their cars
+    //could add legend as well
+}
+
+
+
+async function pageTwo() {
+
+const data = await d3.csv('https://ggel.github.io/autompg/carAggregate.csv');
+
+//console.log(data.length);
+
+//var domainArray = new Array(len(data));
+var arr = new Array();
+for(var i = 0; i < data.length; i++){
+  arr.push(i);
+}
+
+//console.log(arr);
+
+var x = d3.scaleBand().domain(arr).range([0, 400]);
+var y = d3.scaleLog().domain([10,150]).range([400,0]).base(10);
+var c = d3.scaleLog().domain([10,95]).range(["orange","green"])
+var margin = 50;
+var width = 500;
+var height = 500;
+
+//var div = d3.select("body").append("div")	
+var div = d3.select("body").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0);
+
+
+d3.select('svg').selectAll("*").remove();
+
+d3.select('svg')
+//.attr("width", width + 2*margin)
+//.attr("height", height + 2*margin)
+.append("g")
+.attr("transform","translate("+margin+","+margin+")")
+.selectAll('rect').data(data).enter().append('rect')
+.attr("x", function(d,i) {return x(i);})
+.attr("y", function(d,i) {return y(d.AverageMPG);})
+.attr("height", function(d,i) {return 400 - y(d.AverageMPG);})
+.attr("width", x.bandwidth()-2)
+.style("fill", function(d,i) {return c(d.AverageMPG);})
+
+//.attr("color", function(d,i) { c(d.AverageMPG);})
+
+.on("mouseover", function(d) {		
+            div.transition()		
+                .duration(200)		
+                .style("opacity", .9);		
+            div	.html(d.Make + "<br>" + 
+            	"Avg MPG: " + d.AverageMPG + "<br>" +
+            	"Cars: " + d.CarCount + "<br>" + 
+            	"Avg Cylinders: " + d.AverageEngineCyclinders)	
+                .style("left", (d3.event.pageX) + "px")		
+                .style("top", (d3.event.pageY - 28) + "px");	
+            })
+
+.on("mouseout", function(d) {		
+            div.transition()		
+                .duration(500)		
+                .style("opacity", 0);
+            })
+;
+
+
+d3.select("svg").append("g")
+	.attr("transform","translate("+margin+","+margin+")")
+	.call(d3.axisLeft(y).tickValues([10, 20, 50, 100]).tickFormat(d3.format("~s")))
+	;
+/*
+d3.select("svg").append("g")
+	.attr("transform","translate("+margin+","+(400+margin)+")")
+	.call(d3.axisBottom(x).tickValues([10, 20, 50, 100]).tickFormat(d3.format("~s")))
+    ;
+    */
+
+d3.select("svg").append("text")
+    .attr("class", "x label")
+    .attr("text-anchor", "end")
+    .attr("x", width-margin*2+50)
+    .attr("y", height-12)
+    .text("Make");
+
+d3.select("svg").append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "end")
+    .attr("y", 5)
+    .attr("dy", ".75em")
+    .attr("x", -50)
+    .attr("transform", "rotate(-90)")
+    .text("Average Highway MPG");
+
+    //could add dropdown for manufacturer, that highlights their cars
+    //could add legend as well
+}
+
+
+async function pageThree() {
+
+const data = await d3.csv('https://ggel.github.io/autompg/mpgHistorical.csv');
+
+//console.log(data.length);
+
+//var domainArray = new Array(len(data));
+var arr = new Array();
+for(var i = 0; i < data.length; i++){
+  arr.push(i);
+}
+
+//console.log(arr);
+
+var x = d3.scaleLinear().domain([1980, 2016]).range([0, 400]);
+var y = d3.scaleLinear().domain([10,40]).range([400,0]);
+//var c = d3.scaleLog().domain([10,95]).range(["orange","green"])
+var margin = 50;
+var width = 500;
+var height = 500;
+
+//var div = d3.select("body").append("div")	
+var div = d3.select("body").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0);
+
+/*var valueline = d3.line()
+    .x(function(d) { return x(d.Year); })
+    .y(function(d) { return y(d.NewPassengerAvg); });*/
+
+
+d3.select('svg').selectAll("*").remove();
+
+d3.select('svg')
+//.attr("width", width + 2*margin)
+//.attr("height", height + 2*margin)
+.append("g")
+.attr("transform","translate("+margin+","+margin+")")
+.selectAll('path').data(data).enter().append('path')
+.attr("stroke", "steelblue")
+.attr("stroke-width", 1.5)
+.attr("d", d3.line()
+        .x(function(d) { return x(d.Year) })
+        .y(function(d) { return y(d.NewPassengerAvg) })
+        )
+//.attr("x", function(d,i) {return x(i);})
+//.attr("y", function(d,i) {return y(d.AverageMPG);})
+//.attr("height", function(d,i) {return 400 - y(d.AverageMPG);})
+//.attr("width", x.bandwidth()-2)
+.style("fill", "none")
+
+//.attr("color", function(d,i) { c(d.AverageMPG);})
+/*
+.on("mouseover", function(d) {		
+            div.transition()		
+                .duration(200)		
+                .style("opacity", .9);		
+            div	.html(d.Make + "<br>" + 
+            	"Avg MPG: " + d.AverageMPG + "<br>" +
+            	"Cars: " + d.CarCount + "<br>" + 
+            	"Avg Cylinders: " + d.AverageEngineCyclinders)	
+                .style("left", (d3.event.pageX) + "px")		
+                .style("top", (d3.event.pageY - 28) + "px");	
+            })
+
+.on("mouseout", function(d) {		
+            div.transition()		
+                .duration(500)		
+                .style("opacity", 0);
+            })
+;
+*/
+
+d3.select("svg").append("g")
+	.attr("transform","translate("+margin+","+margin+")")
+	.call(d3.axisLeft(y).tickValues([10, 15, 20, 25, 30, 40]).tickFormat(d3.format("~s")))
+	;
+
+d3.select("svg").append("g")
+	.attr("transform","translate("+margin+","+(400+margin)+")")
+	.call(d3.axisBottom(x).tickValues([1980, 1990, 2000, 2010, 2016]).tickFormat(d3.format("~s")))
+    ;
+
+d3.select("svg").append("text")
+    .attr("class", "x label")
+    .attr("text-anchor", "end")
+    .attr("x", width-margin*2+50)
+    .attr("y", height-12)
+    .text("Year");
+
+d3.select("svg").append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "end")
+    .attr("y", 5)
+    .attr("dy", ".75em")
+    .attr("x", -50)
+    .attr("transform", "rotate(-90)")
+    .text("Average MPG");
+
+    //could add dropdown for manufacturer, that highlights their cars
+    //could add legend as well
+}
+
 
 async function nextFunction() {
 	if (document.getElementById("demo").innerHTML == "1. City and Highway MPG by Cyclinders") {
 		document.getElementById("demo").innerHTML = "2. MPG by Make";
-		//call function to build second chart
+		pageTwo();
 	}
 	else if (document.getElementById("demo").innerHTML == "2. MPG by Make") {
 		document.getElementById("demo").innerHTML = "3. MPG over past X years";
-		//call function to build third chart
+		//pageThree();
 	}
 }
 	
 async function backFunction() {
 	if (document.getElementById("demo").innerHTML == "2. MPG by Make") {
 		document.getElementById("demo").innerHTML = "1. City and Highway MPG by Cyclinders";
-		//call function to build first chart
+		pageOne();
 	}
 	else if (document.getElementById("demo").innerHTML == "3. MPG over past X years") {
 		document.getElementById("demo").innerHTML = "2. MPG by Make";
-		//call function to build second chart
+		pageTwo();
 	}
 
 }
