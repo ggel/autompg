@@ -3,19 +3,22 @@
 <head>
 <script src='https://d3js.org/d3.v5.min.js'></script>
 <style> 
-	circle {fill: lightblue; stroke: black;} 
-	.center {text-align: center;}
-	.count {color: black;}
+	
+circle {fill: lightblue; stroke: black;} 
 
-	div.tooltip {	
-    position: absolute;			
-    text-align: center;								
-    padding: 2px;				
-    font: 12px sans-serif;		
-    background: lightsteelblue;	
-    border: 0px;		
-    border-radius: 8px;			
-    pointer-events: none;			
+.center {text-align: center;}
+.count {color: black;}
+.white {color: white;}
+
+div.tooltip {	
+position: absolute;			
+text-align: center;								
+padding: 2px;				
+font: 12px sans-serif;		
+background: lightsteelblue;	
+border: 0px;		
+border-radius: 8px;			
+pointer-events: none;			
 }
 
 .line {
@@ -35,7 +38,6 @@
   pointer-events: all;
 }
 
-/* Style the dots by assigning a fill and stroke */
 .dot {
     fill: #ffab00;
     stroke: #fff;
@@ -51,6 +53,15 @@
   stroke: steelblue;
 }
 
+#demo {
+	font-weight:bold;
+} 
+
+#demo2 {width: 700px;
+text-align: center;
+margin: auto;
+} 
+
 
 
 </style>
@@ -65,7 +76,9 @@
 <div class="center">
 	<button onclick="backFunction()">Back Slide</button>
 	<button onclick="nextFunction()">Next Slide</button>
+	<div class="white">.</div>
 	<div id = "demo">1. Average MPG and CAFE standards since 1980</div>
+	<div id = "demo2">The Corporate Average Fuel Economy (CAFE) was introduced in 1975, following the 1973–74 Arab Oil Embargo. After a long pause in CAFE increases through the 90s and early 2000s, The Energy Independence and Security Act of 2007 set a goal of 35 MPG by 2020. Today the average MPG is up over 50% since 1980. <u>Hover over the chart's circles to see MPG and year.</u></div>
 </div>
 
 
@@ -87,8 +100,6 @@ pageOne()
 async function pageThree() {
 
 const data = await d3.csv('https://flunky.github.io/cars2017.csv');
-
-//console.log(data[0].EngineCylinders,data[0].AverageCityMPG,data[0].AverageHighwayMPG);
 
 var x = d3.scaleLog().domain([10,150]).range([0,400]).base(10);
 var y = d3.scaleLog().domain([10,150]).range([400,0]).base(10);
@@ -154,6 +165,30 @@ d3.select("svg").append("text")
     .text("Average City MPG");
 
 d3.select("svg").append("text")
+    .attr("class", "x label")
+    .attr("text-anchor", "begin")
+    .attr("x", 500)
+    .attr("y", 100)
+    .attr("fill", "red")
+    .text("Gasoline");
+
+d3.select("svg").append("text")
+    .attr("class", "x label")
+    .attr("text-anchor", "begin")
+    .attr("x", 500)
+    .attr("y", 120)
+    .attr("fill", "green")
+    .text("Electric");
+
+d3.select("svg").append("text")
+    .attr("class", "x label")
+    .attr("text-anchor", "begin")
+    .attr("x", 500)
+    .attr("y", 140)
+    .attr("fill", "lightblue")
+    .text("Diesel");
+
+d3.select("svg").append("text")
     .attr("class", "y label")
     .attr("text-anchor", "end")
     .attr("y", 5)
@@ -162,8 +197,6 @@ d3.select("svg").append("text")
     .attr("transform", "rotate(-90)")
     .text("Average Highway MPG");
 
-    //could add dropdown for manufacturer, that highlights their cars
-    //could add legend as well
 };
 
 
@@ -172,15 +205,11 @@ async function pageTwo() {
 
 const data = await d3.csv('https://ggel.github.io/autompg/carAggregate.csv');
 
-//console.log(data.length);
-
-//var domainArray = new Array(len(data));
 var arr = new Array();
 for(var i = 0; i < data.length; i++){
   arr.push(i);
 }
 
-//console.log(arr);
 
 var x = d3.scaleBand().domain(arr).range([0, 400]);
 var y = d3.scaleLog().domain([10,150]).range([400,0]).base(10);
@@ -189,7 +218,6 @@ var margin = 50;
 var width = 500;
 var height = 500;
 
-//var div = d3.select("body").append("div")	
 var div = d3.select("body").append("div")	
     .attr("class", "tooltip")				
     .style("opacity", 0);
@@ -198,8 +226,6 @@ var div = d3.select("body").append("div")
 d3.select('svg').selectAll("*").remove();
 
 d3.select('svg')
-//.attr("width", width + 2*margin)
-//.attr("height", height + 2*margin)
 .append("g")
 .attr("transform","translate("+margin+","+margin+")")
 .selectAll('rect').data(data).enter().append('rect')
@@ -208,8 +234,6 @@ d3.select('svg')
 .attr("height", function(d,i) {return 400 - y(d.AverageMPG);})
 .attr("width", x.bandwidth()-1)
 .style("fill", function(d,i) {return c(d.AverageMPG);})
-
-//.attr("color", function(d,i) { c(d.AverageMPG);})
 
 .on("mouseover", function(d) {		
             div.transition()		
@@ -250,6 +274,22 @@ d3.select("svg").append("text")
     .text("Make");
 
 d3.select("svg").append("text")
+    .attr("class", "x label")
+    .attr("text-anchor", "begin")
+    .attr("x", 500)
+    .attr("y", 100)
+    .attr("fill", "green")
+    .text("High MPG");
+
+d3.select("svg").append("text")
+    .attr("class", "x label")
+    .attr("text-anchor", "begin")
+    .attr("x", 500)
+    .attr("y", 120)
+    .attr("fill", "orange")
+    .text("Low MPG");
+
+d3.select("svg").append("text")
     .attr("class", "y label")
     .attr("text-anchor", "end")
     .attr("y", 5)
@@ -258,8 +298,6 @@ d3.select("svg").append("text")
     .attr("transform", "rotate(-90)")
     .text("Average MPG");
 
-    //could add dropdown for manufacturer, that highlights their cars
-    //could add legend as well
 };
 
 
@@ -272,67 +310,54 @@ var div = d3.select("body").append("div")
     .style("opacity", 0);
 
 var margin = {top: 50, right: 50, bottom: 50, left: 50}
-  , width = 500 // Use the window's width 
-  , height = 500; // Use the window's height
+  , width = 500 
+  , height = 500; 
 
-// The number of datapoints
 var n = data.length;
 
-// 5. X scale will use the index of our data
 var xScale = d3.scaleLinear()
-    .domain([1980, 2016]) // input
-    .range([0, 400]); // output
+    .domain([1980, 2016]) 
+    .range([0, 400]); 
 
-// 6. Y scale will use the randomly generate number 
 var yScale = d3.scaleLinear()
-    .domain([20, 40]) // input 
-    .range([400, 0]); // output 
+    .domain([20, 40]) 
+    .range([400, 0]);  
 
-// 7. d3's line generator
 var line = d3.line()
-    .x(function(d, i) { return xScale(d.Year); }) // set the x values for the line generator
-    .y(function(d) { return yScale(d.NewPassengerAvg); }) // set the y values for the line generator 
-    .curve(d3.curveMonotoneX); // apply smoothing to the line
+    .x(function(d, i) { return xScale(d.Year); }) 
+    .y(function(d) { return yScale(d.NewPassengerAvg); }) 
+    .curve(d3.curveMonotoneX); 
 
 var line2 = d3.line()
-    .x(function(d, i) { return xScale(d.Year); }) // set the x values for the line generator
-    .y(function(d) { return yScale(d.CafePassenger); }) // set the y values for the line generator 
+    .x(function(d, i) { return xScale(d.Year); }) 
+    .y(function(d) { return yScale(d.CafePassenger); }) 
     .curve(d3.curveMonotoneX);
 
-// 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
-//var dataset = d3.range(n).map(function(d) { return {"y": d3.randomUniform(1)() } })
 
-// 1. Add the SVG to the page and employ #2
 d3.select('svg').selectAll("*").remove();
 
 var svg = d3.select("svg")
-    //.attr("width", width + margin.left + margin.right)
-    //.attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-// 3. Call the x axis in a group tag
 svg.append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + 400 + ")")
-    .call(d3.axisBottom(xScale).tickFormat(d3.format("d"))); // Create an axis component with d3.axisBottom
+    .call(d3.axisBottom(xScale).tickFormat(d3.format("d"))); 
 
-// 4. Call the y axis in a group tag
 svg.append("g")
     .attr("class", "y axis")
-    .call(d3.axisLeft(yScale)); // Create an axis component with d3.axisLeft
+    .call(d3.axisLeft(yScale)); 
 
-// 9. Append the path, bind the data, and call the line generator 
 svg.append("path")
-    .datum(data) // 10. Binds data to the line 
-    .attr("class", "line") // Assign a class for styling 
-    .attr("d", line); // 11. Calls the line generator 
+    .datum(data) 
+    .attr("class", "line") 
+    .attr("d", line); 
 
-// 12. Appends a circle for each datapoint 
 svg.selectAll(".dot")
     .data(data)
-  .enter().append("circle") // Uses the enter().append() method
-    .attr("class", "dot") // Assign a class for styling
+  .enter().append("circle") 
+    .attr("class", "dot") 
     .attr("cx", function(d, i) { return xScale(d.Year) })
     .attr("cy", function(d) { return yScale(d.NewPassengerAvg) })
     .attr("r", 5)
@@ -353,17 +378,15 @@ svg.selectAll(".dot")
             })
 ;
 
-
 svg.append("path")
-    .datum(data) // 10. Binds data to the line 
-    .attr("class", "line2") // Assign a class for styling 
-    .attr("d", line2); // 11. Calls the line generator 
+    .datum(data) 
+    .attr("class", "line2") 
+    .attr("d", line2); 
 
-// 12. Appends a circle for each datapoint 
 svg.selectAll(".dot2")
     .data(data)
-  .enter().append("circle") // Uses the enter().append() method
-    .attr("class", "dot2") // Assign a class for styling
+  .enter().append("circle") 
+    .attr("class", "dot2") 
     .attr("cx", function(d, i) { return xScale(d.Year) })
     .attr("cy", function(d) { return yScale(d.CafePassenger) })
     .attr("r", 5)
@@ -392,6 +415,22 @@ d3.select("svg").append("text")
     .text("Year");
 
 d3.select("svg").append("text")
+    .attr("class", "x label")
+    .attr("text-anchor", "begin")
+    .attr("x", 500)
+    .attr("y", 100)
+    .attr("fill", "#0099ff")
+    .text("CAFE");
+
+d3.select("svg").append("text")
+    .attr("class", "x label")
+    .attr("text-anchor", "begin")
+    .attr("x", 500)
+    .attr("y", 120)
+    .attr("fill", "#ffab00")
+    .text("New Passenger");
+
+d3.select("svg").append("text")
     .attr("class", "y label")
     .attr("text-anchor", "end")
     .attr("y", 5)
@@ -407,23 +446,27 @@ d3.select("svg").append("text")
 
 async function nextFunction() {
 	if (document.getElementById("demo").innerHTML == "1. Average MPG and CAFE standards since 1980") {
-		document.getElementById("demo").innerHTML = "2. Average MPG by Make";
+		document.getElementById("demo").innerHTML = "2. Average MPG by Make (2017)";
 		pageTwo();
+		document.getElementById("demo2").innerHTML = "Certain manufacturers of luxury vehicles opt to pay fines instead of meeting CAFE standards, while manufacturers with average MPG that exceed CAFE standards (36.9 for passenger cars in 2016) can earn credits. <u>Hover over the chart's bars to see the manufacturer and number of cars included.</u>";
 	}
-	else if (document.getElementById("demo").innerHTML == "2. Average MPG by Make") {
-		document.getElementById("demo").innerHTML = "3. City and Highway MPG by Cyclinders";
+	else if (document.getElementById("demo").innerHTML == "2. Average MPG by Make (2017)") {
+		document.getElementById("demo").innerHTML = "3. City and Highway MPG by Cyclinders (2017)";
 		pageThree();
+		document.getElementById("demo2").innerHTML = "There is a clear bifurcation in 2017 cars based on MPG. Gasoline (red) and diesel (light blue) cars are below 50, while electric (green) cars average around 100. Additionally there is a clear relationships between cylinders (circle size) and MPG. <u>Hover over the chart's circles to see make, number of cylinders and MPG.</u>";
 	}
 }
 	
 async function backFunction() {
-	if (document.getElementById("demo").innerHTML == "2. Average MPG by Make") {
+	if (document.getElementById("demo").innerHTML == "2. Average MPG by Make (2017)") {
 		document.getElementById("demo").innerHTML = "1. Average MPG and CAFE standards since 1980";
 		pageOne();
+		document.getElementById("demo2").innerHTML = "The Corporate Average Fuel Economy (CAFE) was introduced in 1975, following the 1973–74 Arab Oil Embargo. After a long pause in CAFE increases through the 90s and early 2000s, The Energy Independence and Security Act of 2007 set a goal of 35 MPG by 2020. Today the average MPG is up over 50% since 1980. <u>Hover over the chart's circles to see MPG and year.</u>"
 	}
-	else if (document.getElementById("demo").innerHTML == "3. City and Highway MPG by Cyclinders") {
-		document.getElementById("demo").innerHTML = "2. Average MPG by Make";
+	else if (document.getElementById("demo").innerHTML == "3. City and Highway MPG by Cyclinders (2017)") {
+		document.getElementById("demo").innerHTML = "2. Average MPG by Make (2017)";
 		pageTwo();
+		document.getElementById("demo2").innerHTML = "Certain manufacturers of luxury vehicles opt to pay fines instead of meeting CAFE standards, while manufacturers with average MPG that exceed CAFE standards (36.9 for passenger cars in 2016) can earn credits. <u>Hover over the chart's bars to see the manufacturer and number of cars included.</u>";
 	}
 
 }
